@@ -6,7 +6,6 @@ import br.com.cruzvita.requisicoes.fixacao.dto.AutenticacaoDTO;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.Cipher;
-import javax.crypto.EncryptedPrivateKeyInfo;
 import javax.crypto.spec.IvParameterSpec;
 
 @RestController
@@ -25,7 +24,6 @@ public class RequisicaoController {
 
 	@PostMapping("/login")
 	public String atenticacao(@RequestBody AutenticacaoDTO login) throws Exception {
-		String senhacripto = null;
 		String senhaDecript = null;
 		String erro;
 		login.autenticado = false;
@@ -38,9 +36,10 @@ public class RequisicaoController {
 
 			senhaDecript = decrypt(login.getSenhaCriptografada(), chaveencriptacao);
 			login.setSenhaDecriptografada(senhaDecript);
+
 		} else {
 			login.autenticado = false;
-			
+
 		}
 
 		if (login.autenticado == true) {
@@ -48,7 +47,7 @@ public class RequisicaoController {
 			return "Você está logado" + "\n" + login;
 
 		} else {
-			erro = (login.getSenha().length() < 8) ? "senha invalida, menor que 8" : "email invalido";
+			erro = (login.getSenha() == null) ? "senha invalida menor que 8" : "email invalido";
 			return "Dados errados." + "\n" + erro + "\n" + login;
 		}
 	}
